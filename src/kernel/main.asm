@@ -31,10 +31,13 @@ pm32main:
     mov gs, ax
     mov ss, ax
 
+    mov dword [CURSOR], 0
+
     mov ah, 0x0F
-    mov al, "P"
-    mov ebx, 0
-    call write_teletype_at_ebx
+    mov ebx, [CURSOR]
+    mov dl, 0
+    mov si, msg_hey
+    call putsvga
 
     hlt
 
@@ -42,5 +45,12 @@ halt:
     jmp halt
 
 %include "src/drivers/vga.asm"
+%include "src/functions/putsvga.asm"
+
+jmp $
+
+msg_hey: db "hey!", 0x00
+
+CURSOR equ 0x90000
 
 times (512*7)-($-$$) db 0

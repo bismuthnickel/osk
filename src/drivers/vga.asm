@@ -12,4 +12,5 @@ write_teletype_at_ebx:
     add ecx, ebx
     mov word [ecx], ax
     pop ecx
+    add ebx, 2
     ret
