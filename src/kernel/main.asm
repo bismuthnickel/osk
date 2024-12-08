@@ -34,7 +34,6 @@ pm32main:
     mov dword [CURSOR], 0
 
     mov ah, 0x0F
-    mov ebx, [CURSOR]
     mov dl, 0
     mov si, msg_hey
     call putsvga
