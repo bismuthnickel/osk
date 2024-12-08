@@ -43,4 +43,4 @@ halt:
 
 %include "src/drivers/vga.asm"
 
-times (512)*7 db 0
+times (512*7)-($-$$) db 0
