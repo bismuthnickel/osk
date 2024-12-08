@@ -37,8 +37,10 @@ pm32main:
     mov dl, 0
     mov si, msg_hey
     call putsvga
-
-    hlt
+    call putsvga
+    call putsvga
+    call putsvga
+    call putsvga
 
 halt:
     jmp halt
@@ -48,7 +50,7 @@ halt:
 
 jmp $
 
-msg_hey: db "hey!", 0x00
+msg_hey: db "hey!", 0
 
 CURSOR equ 0x90000
 
