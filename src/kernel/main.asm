@@ -1,5 +1,4 @@
 [org 0x7e00]
-
 jmp _start
 
 %include "src/lib/gdt.asm"
@@ -36,10 +35,6 @@ pm32main:
     mov al, "P"
     mov ebx, 0
     call write_teletype_at_ebx
-
-    mov ah, 5
-    mov al, 5
-    call move_cursor
 
     hlt
 
