@@ -3,9 +3,9 @@ BUILD_DIR=build
 
 ASM=nasm
 
-.PHONY: all bootloader main_image always clean
+.PHONY: all bootloader kernel main_image always clean
 
-all: always bootloader main_image
+all: clean always bootloader kernel main_image
 
 main_image: $(BUILD_DIR)/OS.img
 

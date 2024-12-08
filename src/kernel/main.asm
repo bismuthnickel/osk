@@ -9,9 +9,9 @@ _start:
     cli                     ; Disable interrupts for setup
 
     ; Set VGA text mode (80x25)
-    ; mov ah, 0x00            ; BIOS function: Set video mode
-    ; mov al, 0x03            ; VGA text mode
-    ; int 0x10
+    mov ah, 0x00            ; BIOS function: Set video mode
+    mov al, 0x03            ; VGA text mode
+    int 0x10
 
     ; Load GDT
     lgdt [gdt_descriptor]   ; Load GDT descriptor
@@ -32,16 +32,20 @@ pm32main:
     mov gs, ax
     mov ss, ax
 
-    ; Write 'P' with white text on black background to video memory
-    mov ax, 0x0700         ; Character 'P' (0x50) with attribute (0x0F)
+    mov ah, 0x0F
     mov al, "P"
-    mov ebx, 0xB8000        ; Video memory base address
-    mov word [ebx], ax      ; Write character and attribute
-    add ebx, 4
-    mov al, "e"
-    mov word [ebx], ax      ; Write character and attribute
+    mov ebx, 0
+    call write_teletype_at_ebx
+
+    mov ah, 5
+    mov al, 5
+    call move_cursor
+
+    hlt
 
 halt:
     jmp halt
+
+%include "src/drivers/vga.asm"
 
 times (512)*7 db 0
