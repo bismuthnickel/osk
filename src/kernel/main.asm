@@ -37,9 +37,13 @@ pm32main:
     mov dl, 0
     mov si, msg_hey
     call putsvga
-    call putsvga
-    call putsvga
-    call putsvga
+    mov dword ebx, [CURSOR]
+    mov bx, 0x0101
+    call set_cursor_row_column
+    mov dword [CURSOR], ebx
+    mov ah, 0x0A
+    mov dl, 0
+    mov si, msg_ack
     call putsvga
 
 halt:
@@ -47,11 +51,11 @@ halt:
 
 %include "src/drivers/vga.asm"
 %include "src/functions/putsvga.asm"
+%include "src/lib/cursor.asm"
 
 jmp $
 
 msg_hey: db "hey!", 0
-
-CURSOR equ 0x90000
+msg_ack: db "ack!", 0
 
 times (512*7)-($-$$) db 0
