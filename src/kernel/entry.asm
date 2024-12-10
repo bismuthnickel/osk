@@ -1,10 +1,8 @@
-[org 0x7e00]
-jmp _start
-
-%include "src/lib/gdt.asm"
+section .text
 
 [bits 16]
-_start:
+global entry
+entry:
     cli                     ; Disable interrupts for setup
 
     ; Set VGA text mode (80x25)
@@ -21,6 +19,8 @@ _start:
     ; Long jump to protected mode
     jmp 0x08:pm32main       ; Load CS with code segment selector (0x08)
 
+extern main
+
 [bits 32]
 pm32main:
     cli                     ; Clear interrupts (for safety during setup)
@@ -30,21 +30,11 @@ pm32main:
     mov fs, ax
     mov gs, ax
     mov ss, ax
+    mov esp, 0x90000
 
     mov dword [CURSOR], 0
 
-    mov ah, 0x0F
-    mov dl, 0
-    mov si, msg_hey
-    call putsvga
-    mov dword ebx, [CURSOR]
-    mov bx, 0x0101
-    call set_cursor_row_column
-    mov dword [CURSOR], ebx
-    mov ah, 0x0A
-    mov dl, 0
-    mov si, msg_ack
-    call putsvga
+    call main
 
 halt:
     jmp halt
@@ -54,6 +44,10 @@ halt:
 %include "src/lib/cursor.asm"
 
 jmp $
+
+section .data
+
+%include "src/lib/gdt.asm"
 
 msg_hey: db "hey!", 0
 msg_ack: db "ack!", 0
