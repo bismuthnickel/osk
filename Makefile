@@ -1,7 +1,9 @@
 SRC_DIR=src
 BUILD_DIR=build
+TOOLS_DIR=tools
 
 ASM=nasm
+CC=gcc
 
 .PHONY: all bootloader kernel main_image always clean
 
@@ -20,8 +22,10 @@ $(BUILD_DIR)/bootloader.bin: $(SRC_DIR)/bootloader/boot.asm
 
 kernel: $(BUILD_DIR)/kernel.bin
 
-$(BUILD_DIR)/kernel.bin: $(SRC_DIR)/kernel/main.asm
-	$(ASM) $< -f bin -o $@
+$(BUILD_DIR)/kernel.bin:
+	$(ASM) -f elf32 -o $(BUILD_DIR)/kernel_entry.o $(SRC_DIR)/kernel/entry.asm
+	$(CXX) -e main -ffreestanding -m32 -nostdlib -no-pie -o $(BUILD_DIR)/kernel.o $(wildcard $(SRC_DIR)/kernel/*.cpp)
+	ld -nostdlib -no-pie -m elf_i386 -Map=$(BUILD_DIR)/stage2.map -T $(TOOLS_DIR)/kernel.ld -o $(BUILD_DIR)/kernel.bin $(BUILD_DIR)/kernel_entry.o $(BUILD_DIR)/kernel.o
 
 always:
 	mkdir -p $(BUILD_DIR)
