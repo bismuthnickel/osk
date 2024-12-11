@@ -24,7 +24,7 @@ kernel: $(BUILD_DIR)/kernel.bin
 
 $(BUILD_DIR)/kernel.bin:
 	$(ASM) -f elf32 -o $(BUILD_DIR)/kernel_entry.o $(SRC_DIR)/kernel/entry.asm
-	$(CXX) -e main -ffreestanding -m32 -nostdlib -no-pie -o $(BUILD_DIR)/kernel.o $(wildcard $(SRC_DIR)/kernel/*.cpp)
+	$(CXX) -e main -ffreestanding -m32 -nostdlib -no-pie -o $(BUILD_DIR)/kernel.o $(wildcard $(SRC_DIR)/kernel/*.cpp) $(wildcard $(SRC_DIR)/kernel/*/*.cpp)
 	ld -nostdlib -no-pie -m elf_i386 -Map=$(BUILD_DIR)/stage2.map -T $(TOOLS_DIR)/kernel.ld -o $(BUILD_DIR)/kernel.bin $(BUILD_DIR)/kernel_entry.o $(BUILD_DIR)/kernel.o
 
 always:

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include "x86.hpp"
 
-void x86_outb(unsigned short port, unsigned char value) {
+void outb(unsigned short port, unsigned char value) {
     __asm__ __volatile__ (
         "out %%al, %%dx"
         : // No output operands
@@ -11,7 +11,7 @@ void x86_outb(unsigned short port, unsigned char value) {
 }
 
 // Function prototype with cdecl calling convention
-uint8_t __attribute__((cdecl)) x86_inb(uint16_t port) {
+uint8_t inb(uint16_t port) {
     uint8_t result;
     
     // Inline assembly to perform the I/O port read (in AL, port)
