@@ -5,6 +5,18 @@
 jmp _start
 
 ; declare headers or something up here
+osk_header:
+    dq 0
+    dq 0
+    db "OSK"
+    dd 0
+    db "The Open Source Kernel"
+    dq 0
+    db "Created by a couple of people"
+    dd 0
+    db "just me and me :/"
+    dq 0
+    dq 0
 
 _start:
     xor ax, ax ; we cant directly write to segment registers so we use ax.
