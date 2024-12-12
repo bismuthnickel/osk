@@ -32,16 +32,10 @@ pm32main:
     mov ss, ax
     mov esp, 0x90000
 
-    mov dword [CURSOR], 0
-
     call main
 
 halt:
     jmp halt
-
-%include "src/drivers/vga.asm"
-%include "src/functions/putsvga.asm"
-%include "src/lib/cursor.asm"
 
 jmp $
 
