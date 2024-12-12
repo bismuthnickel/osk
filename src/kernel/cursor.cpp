@@ -1,4 +1,6 @@
 #include "x86.hpp"
+#include "cursor.hpp"
+
 
 void disable_hardware_cursor()
 {
