@@ -1,5 +1,12 @@
 #include <stdint.h>
 #include "vga.h"
+#include "io.h"
+
+void disable_cursor()
+{
+	outb(0x3D4, 0x0A);
+	outb(0x3D5, 0x20);
+}
 
 void write_char(char c, uint8_t color, uint16_t* x, uint16_t* y) {
     uint16_t position = (*y * SCREEN_WIDTH + *x) * 2;

@@ -1,68 +1,82 @@
+;
+; OSBL
+;
+
 [org 0x7c00]
 [bits 16]
 
-; jump to entry point
 jmp _start
+nop
 
-; declare headers or something up here
-osk_header:
-    dq 0
-    dq 0
-    db "OSK"
-    dd 0
-    db "The Open Source Kernel"
-    dq 0
-    db "Created by a couple of people"
-    dd 0
-    db "just me and me :/"
-    dq 0
-    dq 0
+load_into: dw 0x7e00
+disk_num: db 0
+
+required_header_thats_required_for_some_reason: db "OSBL"
 
 _start:
-    xor ax, ax ; we cant directly write to segment registers so we use ax.
+    xor ax, ax
     mov ds, ax
     mov es, ax
     mov ss, ax
-    mov sp, 0x7bff ; stack grows down so we put it's origin right before our code
-
-    mov [drive_num], dl
-
-    mov si, msg_loading ; set si to the address of our message
-    mov dl, 0 ; set the string to be terminated by null character
-    call puts
-
-    ; AH = 02h
-    ; AL = number of sectors to read (must be nonzero)
-    ; CH = low eight bits of cylinder number
-    ; CL = sector number 1-63 (bits 0-5)
-    ; high two bits of cylinder (bits 6-7, hard disk only)
-    ; DH = head number
-    ; DL = drive number (bit 7 set for hard disk)
-    ; ES:BX -> data buffer
-
+    mov sp, 0x7bff
+    mov [disk_num], dl
+    mov si, msg_0
+    mov dl, 0
+    call log
+    call wait_one_second
+    mov si, msg_1
+    call log
+    cmp dword [required_header_thats_required_for_some_reason], "OSBL"
+    jne halt
+    call wait_one_second
+    mov si, msg_2
+    call log
     mov ah, 0x02
     mov al, 64
     mov ch, 0
     mov cl, 2
     mov dh, 0
-    mov dl, [drive_num]
-    mov bx, 0x7e00
+    mov dl, [disk_num]
+    mov bx, [load_into]
     int 0x13
+    call wait_one_second
+    jmp [load_into]
+    mov si, msg_fail
+    call log
 
-    call 0x7e00
-
-    jmp halt
 halt:
-    jmp halt
+    jmp $
 
-; functions and routines
-%include "src/functions/puts.asm" ; we have to include the src/functions/ because this is relative to the makefile
+log:
+    push ax
+    push bx
+    mov ah, 0x0e
+    mov bx, 0
+.loop:
+    mov al, [si]
+    add si, 1
+    cmp al, dl
+    je .return
+    int 0x10
+    jmp .loop
+.return:
+    pop bx
+    pop ax
+    ret
 
-jmp $ ; bad idea to let our program run past our code. put this here just in case a function forgets to return or something
+wait_one_second:
+    pusha
+    mov cx, 0x0f
+    mov dx, 0x4240
+    mov ah, 0x86
+    int 0x15
+    popa
+    ret
 
-; declare data
-msg_loading: db "loading sectors 2-4", 0x0d, 0x0a, 0x00
-drive_num: db 0
+msg_0: db "OSBL", 0x0d, 0x0a, 0
+msg_1: db "Verifying header", 0x0d, 0x0a, 0
+msg_2: db "Loading from disk", 0x0d, 0x0a, 0
+msg_fail: db "Loading from disk failed", 0x0d, 0x0a, 0
 
 times 510-($-$$) db 0
-db 0x55, 0xaa
+dw 0xaa55

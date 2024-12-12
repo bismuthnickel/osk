@@ -3,6 +3,7 @@
 #include "cursor.h"
 
 uint8_t main() {
+    disable_cursor();
     Cursor cursor;
     clear_screen(0x1B);
     const char msg_hey[] = "OSK - open source kernel";
