@@ -12,5 +12,7 @@ int main() {
         video_memory[i] = blank;
     }
 
+    disable_cursor();
+
     return 0;
 }
