@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include "x86.hpp"
-#include "vga.hpp"
 #include "cursor.hpp"
 
 int main() {
@@ -12,7 +11,7 @@ int main() {
         video_memory[i] = blank;
     }
 
-    disable_cursor();
+    disable_hardware_cursor();
 
     return 0;
 }
