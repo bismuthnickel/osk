@@ -29,7 +29,7 @@ _start:
     ; ES:BX -> data buffer
 
     mov ah, 0x02
-    mov al, 7
+    mov al, 64
     mov ch, 0
     mov cl, 2
     mov dh, 0
