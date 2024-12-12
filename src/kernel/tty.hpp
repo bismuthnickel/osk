@@ -10,7 +10,8 @@ struct Teletype {
 
 #define video_mem ((unsigned short*)0xB8000)
 
+Teletype generate_teletype(uint8_t character, uint8_t color);
 uint16_t get_16_bit_teletype(Teletype teletype);
 void write_teletype(uint16_t teletype, uint16_t location);
 void write_char(uint8_t character, uint8_t color, uint16_t location);
-void write_string(uint16_t* string, uint8_t color, uint16_t location);
+void write_string(const char* string, uint8_t color, uint16_t location);

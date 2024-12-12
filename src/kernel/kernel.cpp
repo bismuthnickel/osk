@@ -12,9 +12,9 @@ int main() {
 
     disable_hardware_cursor();
 
-    char string[4] = "hey";
+    const char my_string[] = "hello!";
 
-    write_string((uint16_t*)string,0x1B,0);
+    write_string(my_string,0x1b,0);
 
     return 0;
 }
