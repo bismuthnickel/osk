@@ -30,7 +30,7 @@ pm32main:
     mov fs, ax
     mov gs, ax
     mov ss, ax
-    mov esp, 0x90000
+    mov esp, 0x00EFFFFF
 
     call main
 
