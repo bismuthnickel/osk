@@ -49,7 +49,4 @@ section .data
 
 %include "src/lib/gdt.asm"
 
-msg_hey: db "hey!", 0
-msg_ack: db "ack!", 0
-
 times (512*7)-($-$$) db 0
