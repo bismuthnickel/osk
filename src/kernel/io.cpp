@@ -1,6 +1,6 @@
 // In x86.cpp (source file)
 #include <stdint.h>
-#include "x86.hpp"
+#include "io.hpp"
 
 void outb(unsigned short port, unsigned char value) {
     __asm__ __volatile__ (

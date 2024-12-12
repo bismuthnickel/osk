@@ -1,7 +1,7 @@
 char header[] = "OSK - The Open Source Kernel";
 
 #include <stdint.h>
-#include "x86.hpp"
+#include "io.hpp"
 #include "cursor.hpp"
 #include "tty.hpp"
 
