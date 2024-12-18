@@ -1,0 +1,48 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+                0x00007e00                        phys = 0x7e00
+                0x00007e00                        . = phys
+
+.entry          0x00007e00        0x0
+                0x00007e00                        __entry_start = .
+ *(.entry)
+
+.text           0x00007e00       0x24
+                0x00007e00                        __text_start = .
+ *(.text)
+ .text          0x00007e00       0x24 build/partial/kernel.o
+                0x00007e00                entry
+
+.data           0x00007e24        0x0
+                0x00007e24                        __data_start = .
+ *(.data)
+ .data          0x00007e24        0x0 build/partial/kernel.o
+
+.rodata         0x00007e24        0x0
+                0x00007e24                        __rodata_start = .
+ *(.rodata)
+
+.eh_frame       0x00007e24       0x38
+ .eh_frame      0x00007e24       0x38 build/partial/kernel.o
+
+.bss            0x00007e5c        0x0
+                0x00007e5c                        __bss_start = .
+ *(.bss)
+ .bss           0x00007e5c        0x0 build/partial/kernel.o
+                0x00007e5c                        __end = .
+LOAD build/partial/kernel.o
+OUTPUT(build/partial/kernel.bin binary)
+
+.comment        0x00000000       0x20
+ .comment       0x00000000       0x20 build/partial/kernel.o
+
+.note.GNU-stack
+                0x00000000        0x0
+ .note.GNU-stack
+                0x00000000        0x0 build/partial/kernel.o

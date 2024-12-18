@@ -1,14 +1,26 @@
+ASM=nasm
 CC=gcc
 LD=ld
 
-qemu := qemu-system-x86_64
-qemu_flags:=-m 2G -display sdl -name OSKr -machine q35 -usb -device usb-mouse -rtc base=localtime
+SRC=src
+BOOT=bootloader
+KERN=kernel
 
-INCLUDES=-Iostd
+BUILD=build
+PART=partial
+
+IMG_SIZE=1440k
+
+.PHONY: all test clean
 
 all:
-	$(CC) $(INCLUDES) -nostdlib -ffreestanding -s -c boot/main.c -o BOOTX64.EFI
-	./tools/make_disk -i OSK.iso -ae /EFI/BOOT/ BOOTX64.EFI
-	rm -rf BOOTX64.EFI
-test:
-	$(qemu) -drive format=raw,unit=0,file=OSK.iso -bios tools/bios64.bin $(qemu_flags)
+	mkdir -p $(BUILD) $(BUILD)/$(PART)
+
+	$(ASM) -f bin -o $(BUILD)/$(PART)/boot.bin $(SRC)/$(BOOT)/boot.asm
+
+	$(CC) -e entry -ffreestanding -m32 -nostdlib -fno-pie -fno-pic -o $(BUILD)/$(PART)/kernel.o -c $(SRC)/$(KERN)/kernel.c
+	$(LD) -nostdlib -m elf_i386 -T tools/linker.ld -o $(BUILD)/$(PART)/kernel.bin $(BUILD)/$(PART)/kernel.o
+
+	cat $(BUILD)/$(PART)/boot.bin $(BUILD)/$(PART)/kernel.bin > $(BUILD)/$(PART)/OS.img
+	cp $(BUILD)/$(PART)/OS.img $(BUILD)/OSK.img
+	truncate -s $(IMG_SIZE) $(BUILD)/OSK.img
